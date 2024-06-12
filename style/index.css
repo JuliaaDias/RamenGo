@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+html {
+scroll-behavior: smooth;
+}
+
+body, a {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-style: normal;
+    font-size: 16px;
+    overflow-x: hidden;
+}
+  
+header{
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    }
+
+header img{
+    width: 10%;
+    margin: 1em;
+}
+
+section.intro{
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: url("../img/bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+section.intro .ilustration{
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+section.intro div{
+    width: 210px;
+    position: absolute;
+    top: 70%;
+    left: 37%;
+    transform: translate(-70%, -37%);
+}
+section.intro p{
+    color: #FFF;
+    line-height: 24px;
+    font-weight: 800;
+}
+
+section.intro a{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1820EF;
+    color: #FFF;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 900;
+    border: none;
+    border-radius: 50px;
+    padding: 0 15px;
+    width: 213px;
+    height: 60px;
+    cursor: pointer;
+    margin-top: 1.75em;
+    text-decoration: none;
+}
+
+section.intro a:hover{
+    transform: scale(1.1);
+    transition: transform 1s;
+}
+
+section.orders{
+    width: 100vw;
+    height: 200vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+section.orders .base{
+    width: 80vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+}
+
+section.orders .base .text h1{ 
+    font-size: 32px;
+    font-weight: 900;
+}
+
+section.orders .base .text p{ 
+    font-weight: 500;
+}
+
+section.orders .base .options{
+    width: 80vw;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+section.orders .base .options .box{
+    width: 300px;
+    height: 300px;
+    border-radius: 1em;
+    background-color: #FAFAED;
+    padding: 1em;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+section.orders .base .options .box h3{
+ color: #1820EF;
+ font-size: 20px;
+ font-weight: 800;
+}
+section.orders .base .options .box p{
+ font-size: 14px;
+ font-weight: 500;
+}
+
+section.orders .base .options .box span{
+ color: #FF4E42;
+ font-size: 20px;
+ font-weight: 800;
+}
+
+@media (max-width: 1024px) {
+    section.intro div {
+     
+    }
+  }
+
+@media (max-width: 768px) {
+    section.intro div {
+     
+    }
+  }
+
+@media (max-width: 425px) {
+section.intro div {
+    
+}
+}
