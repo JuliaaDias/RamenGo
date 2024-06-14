@@ -23,7 +23,6 @@
       <a href="#orders"><p>ORDER NOW</p> <img src="./img/arrow.svg"></a>
     </div>
   </section>
-
   <section id="orders" class="orders">
     <div class="base">
       <div class="text">
@@ -41,8 +40,30 @@
       <div class="options" id="proteinOptions">
         </div>
     </div>
-    <button id="submitButton" disabled>Place Your Order</button>
+    <button id="submitButton" disabled> Place new Order <img src="./img/arrow.svg"> </button>
   </section>
 
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+        <img class="logo" src="./img/logo-modal.svg" />
+      <div class="left">
+        <img id="orderImage" src="" alt="Ramen Image">
+        <div>
+            <h2>Your Order:</h2>
+            <p id="orderDescription"></p>
+        </div>
+      </div>
+      <div class="right">
+        <img src="./img/ilustration-modal.svg" />
+        <h2>Your order is being prepared</h2>
+        <p>Hold on, when you least expect you will be eating your rámen. </p>
+        <button class="close" id="newOrderButton"> Place new Order <img src="./img/arrow.svg"> </button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
 </body>
 </html>
