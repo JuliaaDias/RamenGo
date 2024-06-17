@@ -259,6 +259,10 @@ button#submitButton.inactive:hover {
   left: 1em;
 }
 
+.modal-content .right p{
+  margin-bottom: 1em;
+}
+
 button#newOrderButton {
   display: flex;
   align-items: center;
@@ -274,8 +278,6 @@ button#newOrderButton {
   width: 213px;
   height: 60px;
   cursor: pointer;
-  margin-bottom: 2em;
-  margin-top: 2em;
   text-decoration: none;
 }
 
@@ -283,7 +285,7 @@ button#newOrderButton {
 .modal-content .left {
   width: 50%;
   height: 100%;
-  padding: 5em;
+  padding: 0 5em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -483,11 +485,11 @@ section.orders .options.mobile{
 }
 
 .modal-content .logo{
-  left: 40%;
+  left: 32%;
 }
 
 .modal-content .left #orderImage{
-  width: 45%;
+  width: 80%;
 }
 
 .modal-content .right, .modal-content .left{
@@ -503,15 +505,5 @@ section.orders .options.mobile{
 
   section.orders .options.desktop {
     display: flex;
-  }
-}
-
-@media (min-width: 425px){
-  .modal-content .logo{
-    left: 32%;
-  }
-
-  .modal-content .left #orderImage{
-    width: 80%;
   }
 }
