@@ -1,151 +1,23 @@
-
-function resetSelections() {
-    const boxes = document.querySelectorAll('.box');
-    boxes.forEach(box => {
-        const img = box.querySelector('img');
-        const inactiveSrc = box.getAttribute('data-inactive-src');
-        img.src = inactiveSrc;
-        box.classList.remove('selected');
-    });
-    selectedBrothId = null;
-    selectedProteinId = null;
-    const submitButton = document.getElementById('submitButton');
-    submitButton.classList.add('inactive');
-    submitButton.disabled = true;
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 async function populateOptions(brothOptions, proteinOptions) {
     const broths = await brothList();
     const proteins = await proteinList();
-    const brothOptionsHtml = broths.map(broth => `
-      <div class="box" data-id="${broth.id}" data-type="broth" data-active-src="${broth.imageActive}" data-inactive-src="${broth.imageInactive}">
-        <input type="hidden" name="broth" id="broth-${broth.id}" value="${broth.id}">
-        <label for="broth-${broth.id}">
-          <img class="image" src="${broth.imageInactive}" alt="${broth.name}">
-          <h3>${broth.name}</h3>
-          <p class="description">${broth.description}</p>
-          <span class="price">US$ ${broth.price}</span>
-        </label>
-      </div>
+
+    const createCarouselItems = (items, type) => items.map(item => `
+        <div class="carousel-item">
+            <div class="box" data-id="${item.id}" data-type="${type}" data-active-src="${item.imageActive}" data-inactive-src="${item.imageInactive}">
+                <input type="hidden" name="${type}" id="${type}-${item.id}" value="${item.id}">
+                <label for="${type}-${item.id}">
+                    <img class="image" src="${item.imageInactive}" alt="${item.name}">
+                    <h3>${item.name}</h3>
+                    <p class="description">${item.description}</p>
+                    <span class="price">US$ ${item.price}</span>
+                </label>
+            </div>
+        </div>
     `).join('');
-    const proteinOptionsHtml = proteins.map(protein => `
-      <div class="box" data-id="${protein.id}" data-type="protein" data-active-src="${protein.imageActive}" data-inactive-src="${protein.imageInactive}">
-        <input type="hidden" name="protein" id="protein-${protein.id}" value="${protein.id}">
-        <label for="protein-${protein.id}">
-          <img class="image" src="${protein.imageInactive}" alt="${protein.name}">
-          <h3>${protein.name}</h3>
-          <p class="description">${protein.description}</p>
-          <span class="price">US$ ${protein.price}</span>
-        </label>
-      </div>
-    `).join('');
-    brothOptions.innerHTML = brothOptionsHtml;
-    proteinOptions.innerHTML = proteinOptionsHtml;
-}
 
-function addEventListenersToBoxes() {
-    let selectedBrothId = null;
-    let selectedProteinId = null;
-    const boxes = document.querySelectorAll('.box');
-    const submitButton = document.getElementById('submitButton');
-    const orderModal = document.getElementById('orderModal');
-    const orderDescription = document.getElementById('orderDescription');
-    const orderImage = document.getElementById('orderImage');
-    const newOrderButton = document.getElementById('newOrderButton');
-    const closeModal = document.querySelector('.close');
-    const loadingIndicator = document.getElementById('loading');
-
-    submitButton.classList.add('inactive'); 
-
-    boxes.forEach(box => {
-        box.addEventListener('click', () => {
-            const type = box.getAttribute('data-type');
-            const id = box.getAttribute('data-id');
-            const img = box.querySelector('img');
-            const activeSrc = box.getAttribute('data-active-src');
-            const inactiveSrc = box.getAttribute('data-inactive-src');
-
-            if (type === 'broth') {
-                if (selectedBrothId && selectedBrothId !== id) {
-                    const previousSelectedBox = document.querySelector(`.box[data-id="${selectedBrothId}"][data-type="broth"]`);
-                    const previousImg = previousSelectedBox.querySelector('img');
-                    previousImg.src = previousSelectedBox.getAttribute('data-inactive-src');
-                    previousSelectedBox.classList.remove('selected');
-                }
-                selectedBrothId = id;
-                document.getElementById('proteinOptions').scrollIntoView({ behavior: 'smooth' });
-            } else if (type === 'protein') {
-                if (selectedProteinId && selectedProteinId !== id) {
-                    const previousSelectedBox = document.querySelector(`.box[data-id="${selectedProteinId}"][data-type="protein"]`);
-                    const previousImg = previousSelectedBox.querySelector('img');
-                    previousImg.src = previousSelectedBox.getAttribute('data-inactive-src');
-                    previousSelectedBox.classList.remove('selected');
-                }
-                selectedProteinId = id;
-            }
-
-            if (box.classList.contains('selected')) {
-                img.src = inactiveSrc;
-                box.classList.remove('selected');
-                if (type === 'broth') {
-                    selectedBrothId = null;
-                } else if (type === 'protein') {
-                    selectedProteinId = null;
-                }
-            } else {
-                img.src = activeSrc;
-                box.classList.add('selected');
-            }
-
-            if (selectedBrothId && selectedProteinId) {
-                submitButton.classList.remove('inactive');
-                submitButton.disabled = false;
-                console.log(`Both items selected: Broth ID = ${selectedBrothId}, Protein ID = ${selectedProteinId}`);
-            } else {
-                submitButton.classList.add('inactive');
-                submitButton.disabled = true;
-            }
-        });
-    });
-
-    submitButton.addEventListener('click', async () => {
-        if (selectedBrothId && selectedProteinId) {
-            const orderData = {
-                brothId: selectedBrothId,
-                proteinId: selectedProteinId
-            };
-            loadingIndicator.style.display = 'block'; 
-            document.body.classList.add('no-scroll');
-            const response = await requestAPI("https://api.tech.redventures.com.br/orders", "POST", orderData);
-            loadingIndicator.style.display = 'none'; 
-            console.log("Order response:", response);
-
-            orderDescription.textContent = response.description;
-            orderImage.src = response.image;
-
-            orderModal.style.display = "block";
-        }
-    });
-
-    newOrderButton.addEventListener('click', () => {
-        orderModal.style.display = "none";
-        document.body.classList.remove('no-scroll');
-        resetSelections();
-    });
-
-    closeModal.addEventListener('click', () => {
-        orderModal.style.display = "none";
-        document.body.classList.remove('no-scroll');
-    });
-
-    window.onclick = (event) => {
-        if (event.target === orderModal) {
-            orderModal.style.display = "none";
-            document.body.classList.remove('no-scroll');
-        }
-    };
+    brothOptions.innerHTML = createCarouselItems(broths, 'broth');
+    proteinOptions.innerHTML = createCarouselItems(proteins, 'protein');
 }
 
 async function requestAPI(url, metodo, dados) {
@@ -193,6 +65,168 @@ async function proteinList() {
     return await requestAPI("https://api.tech.redventures.com.br/proteins", "GET");
 }
 
+function addEventListenersToBoxes() {
+    let selectedBrothId = null;
+    let selectedProteinId = null;
+
+    const boxes = document.querySelectorAll('.carousel-item .box');
+    const submitButton = document.getElementById('submitButton');
+
+    submitButton.classList.add('inactive');
+
+    boxes.forEach(box => {
+        box.addEventListener('click', () => {
+            const type = box.getAttribute('data-type');
+            const id = box.getAttribute('data-id');
+            const img = box.querySelector('img');
+            const activeSrc = box.getAttribute('data-active-src');
+            const inactiveSrc = box.getAttribute('data-inactive-src');
+
+            if (type === 'broth') {
+                if (selectedBrothId === id) {
+                    // Se o mesmo caldo já está selecionado, desselecione-o
+                    selectedBrothId = null;
+                    img.src = inactiveSrc;
+                    box.classList.remove('selected');
+                } else {
+                    // Se outro caldo estava selecionado, desselecione-o primeiro
+                    const alreadySelectedBroth = document.querySelector('.carousel-item .box.selected[data-type="broth"]');
+                    if (alreadySelectedBroth) {
+                        const previousImg = alreadySelectedBroth.querySelector('img');
+                        previousImg.src = alreadySelectedBroth.getAttribute('data-inactive-src');
+                        alreadySelectedBroth.classList.remove('selected');
+                    }
+                    selectedBrothId = id;
+                    img.src = activeSrc;
+                    box.classList.add('selected');
+
+                    // Scroll suave para as opções de proteína após selecionar um caldo
+                    const proteinOptions = document.getElementById('proteinOptions');
+                    if (proteinOptions) {
+                        proteinOptions.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            } else if (type === 'protein') {
+                if (selectedProteinId === id) {
+                    // Se a mesma proteína já está selecionada, desselecione-a
+                    selectedProteinId = null;
+                    img.src = inactiveSrc;
+                    box.classList.remove('selected');
+                } else {
+                    // Se outra proteína estava selecionada, desselecione-a primeiro
+                    const alreadySelectedProtein = document.querySelector('.carousel-item .box.selected[data-type="protein"]');
+                    if (alreadySelectedProtein) {
+                        const previousImg = alreadySelectedProtein.querySelector('img');
+                        previousImg.src = alreadySelectedProtein.getAttribute('data-inactive-src');
+                        alreadySelectedProtein.classList.remove('selected');
+                    }
+                    selectedProteinId = id;
+                    img.src = activeSrc;
+                    box.classList.add('selected');
+                }
+            }
+
+            // Verifica se ambos os itens estão selecionados para ativar o botão de envio
+            if (selectedBrothId && selectedProteinId) {
+                submitButton.classList.remove('inactive');
+                submitButton.disabled = false;
+            } else {
+                submitButton.classList.add('inactive');
+                submitButton.disabled = true;
+            }
+        });
+    });
+
+    submitButton.addEventListener('click', async () => {
+        if (selectedBrothId && selectedProteinId) {
+            const orderData = {
+                brothId: selectedBrothId,
+                proteinId: selectedProteinId
+            };
+            const loadingIndicator = document.getElementById('loading');
+            loadingIndicator.style.display = 'block';
+            try {
+                const response = await requestAPI("https://api.tech.redventures.com.br/orders", "POST", orderData);
+                loadingIndicator.style.display = 'none';
+                document.getElementById('orderDescription').textContent = response.description;
+                document.getElementById('orderImage').src = response.image;
+                document.getElementById('orderModal').style.display = "block";
+            } catch (error) {
+                console.error('Erro ao enviar o pedido:', error);
+                loadingIndicator.style.display = 'none';
+            }
+        }
+    });
+
+    document.getElementById('newOrderButton').addEventListener('click', () => {
+        resetSelections();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('orderModal').style.display = "none";
+    });
+    window.onclick = (event) => {
+        if (event.target === document.getElementById('orderModal')) {
+            document.getElementById('orderModal').style.display = "none";
+        }
+    };
+}
+
+function resetSelections() {
+    const boxes = document.querySelectorAll('.carousel-item .box');
+    boxes.forEach(box => {
+        const img = box.querySelector('img');
+        const inactiveSrc = box.getAttribute('data-inactive-src');
+        img.src = inactiveSrc;
+        box.classList.remove('selected');
+    });
+    const submitButton = document.getElementById('submitButton');
+    submitButton.classList.add('inactive');
+    submitButton.disabled = true;
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const brothOptions = document.getElementById('brothCarouselInner');
+    const proteinOptions = document.getElementById('proteinCarouselInner');
+
+    await populateOptions(brothOptions, proteinOptions);
+    addEventListenersToBoxes();
+
+    const carousels = document.querySelectorAll('.carousel');
+
+    carousels.forEach(carousel => {
+        const inner = carousel.querySelector('.carousel-inner');
+        const dotsContainer = carousel.querySelector('.carousel-dots');
+        const items = inner.children;
+        const dots = [];
+
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            Array.from(items).forEach((item, index) => {
+                item.style.display = index === currentIndex ? 'block' : 'none';
+            });
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        Array.from(items).forEach((item, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+            dotsContainer.appendChild(dot);
+            dots.push(dot);
+        });
+
+        updateCarousel();
+    });
+});
+
 
 window.onload = async () => {
 
@@ -216,3 +250,18 @@ window.onload = async () => {
     }
 };
 
+
+function updateImageSrc() {
+    const introImage = document.getElementById('introImage');
+    if (window.innerWidth < 768) {
+      introImage.src = './img/ilustration-mobile.png';
+    } else {
+      introImage.src = './img/ilustration.png';
+    }
+  }
+
+  window.addEventListener('resize', updateImageSrc);
+  window.addEventListener('DOMContentLoaded', updateImageSrc);
+
+
+  

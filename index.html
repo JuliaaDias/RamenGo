@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="./js/script.js"></script>
+  <script src="./js/script.js" defer></script>
   <link rel="stylesheet" href="style/index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
     <header>
       <img src="./img/logo.svg" />
     </header>
-    <img class="ilustration" src="./img/ilustration.png" alt="">
+    <img id="introImage" class="ilustration" src="./img/ilustration.png" alt="">
     <div>
       <p>Enjoy a good ramen in the comfort of your house. Create your own ramen and choose your favorite flavour combination!</p>
       <a href="#orders"><p>ORDER NOW</p> <img src="./img/arrow.svg"></a>
@@ -29,16 +29,26 @@
         <h1>First things first: select your favorite broth.</h1>
         <p>It will give the whole flavor on your ramen soup. </p>
       </div>
-      <div class="options" id="brothOptions">
+      <div class="options mobile">
+        <div class="carousel" id="brothCarousel">
+            <div class="carousel-inner" id="brothCarouselInner"></div>
+            <div class="carousel-dots" id="brothCarouselDots"></div>
         </div>
+      </div>
+      <div class="options desktop" id="brothOptions"></div>
     </div>
     <div class="base">
       <div class="text">
         <h1>It’s time to choose (or not) your meat!</h1>
         <p>Some people love, some don’t. We have options for all tastes.</p>
       </div>
-      <div class="options" id="proteinOptions">
+      <div class="options mobile">
+        <div class="carousel" id="proteinCarousel">
+            <div class="carousel-inner" id="proteinCarouselInner"></div>
+            <div class="carousel-dots" id="proteinCarouselDots"></div>
         </div>
+      </div>
+      <div class="options desktop" id="proteinOptions"></div>
     </div>
     <button id="submitButton" disabled> Place new Order <img src="./img/arrow.svg"> </button>
   </section>
