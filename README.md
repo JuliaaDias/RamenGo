@@ -4,6 +4,8 @@
 ## :memo: Descrição
 Essa aplicação foi desenvolvida para Desafio da Red ventures utilizando **HTML, CSS e JS** para criação da SPA.
 
+https://ramen-go-gules.vercel.app/
+
 ## :books: Funcionalidades
  * Landing Page
 
